@@ -1,0 +1,2551 @@
+<!doctype html>
+<html lang="en">
+    <head>
+       <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css">
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+		<link rel="stylesheet" href="css/leaflet-control-credits.css" />
+		<link rel="stylesheet" href="css/styledLayerControl.css" />
+		<link rel="stylesheet" href="css/L.Control.MousePosition.css" />
+		<link rel="stylesheet" href="css/Control.MiniMap.css" />
+		<link rel="stylesheet" href="css/L.Control.HtmlLegend.css" />
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+      <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+		<script src="js/styledLayerControl.js"></script>
+		<script src="js/L.Control.MousePosition.js"></script>
+		<script src="js/Control.MiniMap.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/leaflet-control-credits.js"></script>
+		<script src="js/L.Control.HtmlLegend.js"></script>
+		
+		
+        <script src="data/Bacias_Hidrograficas_0.js"></script>
+        <script src="data/aquiferos_1.js"></script>
+        <script src="data/Microrregioes_2.js"></script>
+        <script src="data/Mesorregiao_3.js"></script>
+        <script src="data/Municipios_4.js"></script>
+        <script src="data/Massa_Agua_5.js"></script>
+        <script src="data/Adutoras_operacao_6.js"></script>
+        <script src="data/Hidrografia_7.js"></script>
+        <script src="data/Reservatorios_Monitorados_8.js"></script>
+        <script src="data/Pocos_Semarh_Perfurados_9.js"></script>
+        <script src="data/Barragens_Cadastradas_10.js"></script>
+        <script src="data/Pocos_SEMARH_Secos_11.js"></script>
+        <script src="data/Outorgas_IGARN_12.js"></script>
+        <script src="data/uso_insignificante_13.js"></script>
+        <script src="data/dessalinizadores_14.js"></script>
+        <script src="data/Outorgas_ANA_15.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-8.99536479518,-39.8246210038],[-4.2189897212,-32.2370386273]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        var basemap0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        var basemap1 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap1.addTo(map);
+		
+		var basemap2 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 28
+        });
+		 basemap2.addTo(map);
+        function setBounds() {
+        }
+        function pop_Bacias_Hidrograficas_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_KM2</th>\
+                        <td>' + (feature.properties['AREA_KM2'] !== null ? Autolinker.link(String(feature.properties['AREA_KM2'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Comitê</th>\
+                        <td>' + (feature.properties['Comitê'] !== null ? Autolinker.link(String(feature.properties['Comitê'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Pop_IBGE_</th>\
+                        <td>' + (feature.properties['Pop_IBGE_'] !== null ? Autolinker.link(String(feature.properties['Pop_IBGE_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">METADADOS</th>\
+                        <td>' + (feature.properties['METADADOS'] !== null ? Autolinker.link(String(feature.properties['METADADOS'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Bacias_Hidrograficas_0_0(feature) {
+            switch(String(feature.properties['BACIA'])) {
+                case '15-1':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(221,237,114,1.0)',
+            }
+                    break;
+                case '15-2':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,166,219,1.0)',
+            }
+                    break;
+                case '15-3':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(134,221,66,1.0)',
+            }
+                    break;
+                case '15-4':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(238,190,69,1.0)',
+            }
+                    break;
+                case '16-1':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(223,52,226,1.0)',
+            }
+                    break;
+                case '16-2':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(97,203,210,1.0)',
+            }
+                    break;
+                case '16-3':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,117,152,1.0)',
+            }
+                    break;
+                case '16-4':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,130,94,1.0)',
+            }
+                    break;
+                case '16-5':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(114,95,239,1.0)',
+            }
+                    break;
+                case '16-6':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,99,89,1.0)',
+            }
+                    break;
+                case '16-7':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(24,216,104,1.0)',
+            }
+                    break;
+                case '16-8':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(160,55,240,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Apodi/Mossoró':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(165,14,211,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Boqueirão':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(115,147,223,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Catú':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(136,238,223,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Ceará-Mirim':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(171,208,101,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Curimataú':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(91,27,210,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Guajú':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(205,52,175,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Jacú':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(76,202,101,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Maxaranguape':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(234,140,46,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Pirangí':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(75,208,159,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Pirangi - Sub-bacia do rio Pitimbu':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,128,141,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Piranhas/Açú':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(32,49,240,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Potengi':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(217,211,127,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Punaú':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(149,216,130,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Rio Doce':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(54,210,54,1.0)',
+            }
+                    break;
+                case 'Bacia do rio Trairí':
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,158,209,1.0)',
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_Bacias_Hidrograficas_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(226,114,180,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Bacias_Hidrograficas_0');
+        map.getPane('pane_Bacias_Hidrograficas_0').style.zIndex = 400;
+        map.getPane('pane_Bacias_Hidrograficas_0').style['mix-blend-mode'] = 'normal';
+        var layer_Bacias_Hidrograficas_0 = new L.geoJson(json_Bacias_Hidrograficas_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Bacias_Hidrograficas_0',
+            onEachFeature: pop_Bacias_Hidrograficas_0,
+            style: style_Bacias_Hidrograficas_0_0,
+        });
+        bounds_group.addLayer(layer_Bacias_Hidrograficas_0);
+        function pop_aquiferos_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Aquifero</th>\
+                        <td>' + (feature.properties['Aquifero'] !== null ? Autolinker.link(String(feature.properties['Aquifero'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Cor</th>\
+                        <td>' + (feature.properties['Cor'] !== null ? Autolinker.link(String(feature.properties['Cor'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Descricao</th>\
+                        <td>' + (feature.properties['Descricao'] !== null ? Autolinker.link(String(feature.properties['Descricao'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Consumo</th>\
+                        <td>' + (feature.properties['Consumo'] !== null ? Autolinker.link(String(feature.properties['Consumo'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">cons_anima</th>\
+                        <td>' + (feature.properties['cons_anima'] !== null ? Autolinker.link(String(feature.properties['cons_anima'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">industria</th>\
+                        <td>' + (feature.properties['industria'] !== null ? Autolinker.link(String(feature.properties['industria'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Irrigacao</th>\
+                        <td>' + (feature.properties['Irrigacao'] !== null ? Autolinker.link(String(feature.properties['Irrigacao'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_km2</th>\
+                        <td>' + (feature.properties['Area_km2'] !== null ? Autolinker.link(String(feature.properties['Area_km2'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_aquiferos_1_0(feature) {
+            switch(String(feature.properties['Aquifero'])) {
+                case 'Aluviões':
+                    return {
+                pane: 'pane_aquiferos_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,215,0,1.0)',
+            }
+                    break;
+                case 'Cristalino':
+                    return {
+                pane: 'pane_aquiferos_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(119,136,153,1.0)',
+            }
+                    break;
+                case 'Formação Açu':
+                    return {
+                pane: 'pane_aquiferos_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,100,0,1.0)',
+            }
+                    break;
+                case 'Formação Barreiras':
+                    return {
+                pane: 'pane_aquiferos_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,140,0,1.0)',
+            }
+                    break;
+                case 'Formação Jandaíra':
+                    return {
+                pane: 'pane_aquiferos_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,255,255,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_aquiferos_1');
+        map.getPane('pane_aquiferos_1').style.zIndex = 401;
+        map.getPane('pane_aquiferos_1').style['mix-blend-mode'] = 'normal';
+        var layer_aquiferos_1 = new L.geoJson(json_aquiferos_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_aquiferos_1',
+            onEachFeature: pop_aquiferos_1,
+            style: style_aquiferos_1_0,
+        });
+        bounds_group.addLayer(layer_aquiferos_1);
+        function pop_Microrregioes_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NM_MICRO</th>\
+                        <td>' + (feature.properties['NM_MICRO'] !== null ? Autolinker.link(String(feature.properties['NM_MICRO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_km2</th>\
+                        <td>' + (feature.properties['Area_km2'] !== null ? Autolinker.link(String(feature.properties['Area_km2'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tot_Munic</th>\
+                        <td>' + (feature.properties['Tot_Munic'] !== null ? Autolinker.link(String(feature.properties['Tot_Munic'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Microrregioes_2_0(feature) {
+            switch(String(feature.properties['NM_MICRO'])) {
+                case 'AGRESTE POTIGUAR':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(99,114,233,1.0)',
+            }
+                    break;
+                case 'ANGICOS':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(123,226,223,1.0)',
+            }
+                    break;
+                case 'BAIXA VERDE':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(231,87,34,1.0)',
+            }
+                    break;
+                case 'BORBOREMA POTIGUAR':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(130,231,15,1.0)',
+            }
+                    break;
+                case 'CHAPADA DO APODI':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(187,209,75,1.0)',
+            }
+                    break;
+                case 'LITORAL NORDESTE':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(152,233,127,1.0)',
+            }
+                    break;
+                case 'LITORAL SUL':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(40,228,166,1.0)',
+            }
+                    break;
+                case 'MACAÍBA':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,117,182,1.0)',
+            }
+                    break;
+                case 'MACAU':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,41,47,1.0)',
+            }
+                    break;
+                case 'MÉDIO OESTE':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(188,49,230,1.0)',
+            }
+                    break;
+                case 'MOSSORÓ':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(68,172,209,1.0)',
+            }
+                    break;
+                case 'NATAL':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(41,238,113,1.0)',
+            }
+                    break;
+                case 'PAU DOS FERROS':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(64,124,207,1.0)',
+            }
+                    break;
+                case 'SERIDÓ OCIDENTAL':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,181,104,1.0)',
+            }
+                    break;
+                case 'SERIDÓ ORIENTAL':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(234,46,222,1.0)',
+            }
+                    break;
+                case 'SERRA DE SANTANA':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(143,89,204,1.0)',
+            }
+                    break;
+                case 'SERRA DE SÃO MIGUEL':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,202,117,1.0)',
+            }
+                    break;
+                case 'UMARIZAL':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,80,204,1.0)',
+            }
+                    break;
+                case 'VALE DO AÇU':
+                    return {
+                pane: 'pane_Microrregioes_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(132,229,139,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Microrregioes_2');
+        map.getPane('pane_Microrregioes_2').style.zIndex = 402;
+        map.getPane('pane_Microrregioes_2').style['mix-blend-mode'] = 'normal';
+        var layer_Microrregioes_2 = new L.geoJson(json_Microrregioes_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Microrregioes_2',
+            onEachFeature: pop_Microrregioes_2,
+            style: style_Microrregioes_2_0,
+        });
+        bounds_group.addLayer(layer_Microrregioes_2);
+        function pop_Mesorregiao_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NM_MESO</th>\
+                        <td>' + (feature.properties['NM_MESO'] !== null ? Autolinker.link(String(feature.properties['NM_MESO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_km2</th>\
+                        <td>' + (feature.properties['Area_km2'] !== null ? Autolinker.link(String(feature.properties['Area_km2'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tot_Munic</th>\
+                        <td>' + (feature.properties['Tot_Munic'] !== null ? Autolinker.link(String(feature.properties['Tot_Munic'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Mesorregiao_3_0(feature) {
+            switch(String(feature.properties['NM_MESO'])) {
+                case 'AGRESTE POTIGUAR':
+                    return {
+                pane: 'pane_Mesorregiao_3',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(224,22,140,1.0)',
+            }
+                    break;
+                case 'CENTRAL POTIGUAR':
+                    return {
+                pane: 'pane_Mesorregiao_3',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,190,126,1.0)',
+            }
+                    break;
+                case 'LESTE POTIGUAR':
+                    return {
+                pane: 'pane_Mesorregiao_3',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(100,65,227,1.0)',
+            }
+                    break;
+                case 'OESTE POTIGUAR':
+                    return {
+                pane: 'pane_Mesorregiao_3',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(17,228,231,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Mesorregiao_3');
+        map.getPane('pane_Mesorregiao_3').style.zIndex = 403;
+        map.getPane('pane_Mesorregiao_3').style['mix-blend-mode'] = 'normal';
+        var layer_Mesorregiao_3 = new L.geoJson(json_Mesorregiao_3, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Mesorregiao_3',
+            onEachFeature: pop_Mesorregiao_3,
+            style: style_Mesorregiao_3_0,
+        });
+        bounds_group.addLayer(layer_Mesorregiao_3);
+        function pop_Municipios_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">CD_GEOCMU</th>\
+                        <td>' + (feature.properties['CD_GEOCMU'] !== null ? Autolinker.link(String(feature.properties['CD_GEOCMU'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NM_MUNICIP</th>\
+                        <td>' + (feature.properties['NM_MUNICIP'] !== null ? Autolinker.link(String(feature.properties['NM_MUNICIP'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MICRO</th>\
+                        <td>' + (feature.properties['MICRO'] !== null ? Autolinker.link(String(feature.properties['MICRO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MESO</th>\
+                        <td>' + (feature.properties['MESO'] !== null ? Autolinker.link(String(feature.properties['MESO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_km2</th>\
+                        <td>' + (feature.properties['Area_km2'] !== null ? Autolinker.link(String(feature.properties['Area_km2'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">POP_T</th>\
+                        <td>' + (feature.properties['POP_T'] !== null ? Autolinker.link(String(feature.properties['POP_T'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">POP_U</th>\
+                        <td>' + (feature.properties['POP_U'] !== null ? Autolinker.link(String(feature.properties['POP_U'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">POP_R</th>\
+                        <td>' + (feature.properties['POP_R'] !== null ? Autolinker.link(String(feature.properties['POP_R'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DENS_DEMO</th>\
+                        <td>' + (feature.properties['DENS_DEMO'] !== null ? Autolinker.link(String(feature.properties['DENS_DEMO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IDHM</th>\
+                        <td>' + (feature.properties['IDHM'] !== null ? Autolinker.link(String(feature.properties['IDHM'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Municipios_4_0() {
+            return {
+                pane: 'pane_Municipios_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_Municipios_4');
+        map.getPane('pane_Municipios_4').style.zIndex = 404;
+        map.getPane('pane_Municipios_4').style['mix-blend-mode'] = 'normal';
+        var layer_Municipios_4 = new L.geoJson(json_Municipios_4, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Municipios_4',
+            onEachFeature: pop_Municipios_4,
+            style: style_Municipios_4_0,
+        });
+        bounds_group.addLayer(layer_Municipios_4);
+        map.addLayer(layer_Municipios_4);
+        function pop_Massa_Agua_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NOORIGINAL</th>\
+                        <td>' + (feature.properties['NOORIGINAL'] !== null ? Autolinker.link(String(feature.properties['NOORIGINAL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOALTERNAT</th>\
+                        <td>' + (feature.properties['NOALTERNAT'] !== null ? Autolinker.link(String(feature.properties['NOALTERNAT'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOPROP</th>\
+                        <td>' + (feature.properties['NOPROP'] !== null ? Autolinker.link(String(feature.properties['NOPROP'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DEDOMINIAL</th>\
+                        <td>' + (feature.properties['DEDOMINIAL'] !== null ? Autolinker.link(String(feature.properties['DEDOMINIAL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DEDOMINIO</th>\
+                        <td>' + (feature.properties['DEDOMINIO'] !== null ? Autolinker.link(String(feature.properties['DEDOMINIO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DEFONTE</th>\
+                        <td>' + (feature.properties['DEFONTE'] !== null ? Autolinker.link(String(feature.properties['DEFONTE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DESATELITE</th>\
+                        <td>' + (feature.properties['DESATELITE'] !== null ? Autolinker.link(String(feature.properties['DESATELITE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DEFONTEVAZ</th>\
+                        <td>' + (feature.properties['DEFONTEVAZ'] !== null ? Autolinker.link(String(feature.properties['DEFONTEVAZ'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DEFISCALIZ</th>\
+                        <td>' + (feature.properties['DEFISCALIZ'] !== null ? Autolinker.link(String(feature.properties['DEFISCALIZ'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NUAREAHA</th>\
+                        <td>' + (feature.properties['NUAREAHA'] !== null ? Autolinker.link(String(feature.properties['NUAREAHA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DETIPOMASS</th>\
+                        <td>' + (feature.properties['DETIPOMASS'] !== null ? Autolinker.link(String(feature.properties['DETIPOMASS'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DSVERSAO</th>\
+                        <td>' + (feature.properties['DSVERSAO'] !== null ? Autolinker.link(String(feature.properties['DSVERSAO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(String(feature.properties['Shape_Area'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">area_ha</th>\
+                        <td>' + (feature.properties['area_ha'] !== null ? Autolinker.link(String(feature.properties['area_ha'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Massa_Agua_5_0() {
+            return {
+                pane: 'pane_Massa_Agua_5',
+                opacity: 1,
+                color: 'rgba(55,245,255,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,245,255,1.0)',
+            }
+        }
+        map.createPane('pane_Massa_Agua_5');
+        map.getPane('pane_Massa_Agua_5').style.zIndex = 405;
+        map.getPane('pane_Massa_Agua_5').style['mix-blend-mode'] = 'normal';
+        var layer_Massa_Agua_5 = new L.geoJson(json_Massa_Agua_5, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Massa_Agua_5',
+            onEachFeature: pop_Massa_Agua_5,
+            style: style_Massa_Agua_5_0,
+        });
+        bounds_group.addLayer(layer_Massa_Agua_5);
+        function pop_Adutoras_operacao_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ADUTORA</th>\
+                        <td>' + (feature.properties['ADUTORA'] !== null ? Autolinker.link(String(feature.properties['ADUTORA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">POP_ATEND</th>\
+                        <td>' + (feature.properties['POP_ATEND'] !== null ? Autolinker.link(String(feature.properties['POP_ATEND'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CAPTACAO</th>\
+                        <td>' + (feature.properties['CAPTACAO'] !== null ? Autolinker.link(String(feature.properties['CAPTACAO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUN_ATEND</th>\
+                        <td>' + (feature.properties['MUN_ATEND'] !== null ? Autolinker.link(String(feature.properties['MUN_ATEND'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">EXTENSAO</th>\
+                        <td>' + (feature.properties['EXTENSAO'] !== null ? Autolinker.link(String(feature.properties['EXTENSAO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">VAZAO</th>\
+                        <td>' + (feature.properties['VAZAO'] !== null ? Autolinker.link(String(feature.properties['VAZAO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CONSTRU</th>\
+                        <td>' + (feature.properties['CONSTRU'] !== null ? Autolinker.link(String(feature.properties['CONSTRU'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SITUACAO</th>\
+                        <td>' + (feature.properties['SITUACAO'] !== null ? Autolinker.link(String(feature.properties['SITUACAO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SHAPE_Leng</th>\
+                        <td>' + (feature.properties['SHAPE_Leng'] !== null ? Autolinker.link(String(feature.properties['SHAPE_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Adutoras_operacao_6_0() {
+            return {
+                pane: 'pane_Adutoras_operacao_6',
+                opacity: 1,
+                color: 'rgba(0,255,29,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+            }
+        }
+        function style_Adutoras_operacao_6_1() {
+            return {
+                pane: 'pane_Adutoras_operacao_6',
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '1,5',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 2.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_Adutoras_operacao_6');
+        map.getPane('pane_Adutoras_operacao_6').style.zIndex = 406;
+        map.getPane('pane_Adutoras_operacao_6').style['mix-blend-mode'] = 'normal';
+        var layer_Adutoras_operacao_6 = new L.geoJson.multiStyle(json_Adutoras_operacao_6, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Adutoras_operacao_6',
+            onEachFeature: pop_Adutoras_operacao_6,
+            styles: [style_Adutoras_operacao_6_0,style_Adutoras_operacao_6_1,]
+        });
+        bounds_group.addLayer(layer_Adutoras_operacao_6);
+        function pop_Hidrografia_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? Autolinker.link(String(feature.properties['NOME'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOMEABREV</th>\
+                        <td>' + (feature.properties['NOMEABREV'] !== null ? Autolinker.link(String(feature.properties['NOMEABREV'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COINCIDECO</th>\
+                        <td>' + (feature.properties['COINCIDECO'] !== null ? Autolinker.link(String(feature.properties['COINCIDECO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REGIME</th>\
+                        <td>' + (feature.properties['REGIME'] !== null ? Autolinker.link(String(feature.properties['REGIME'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Hidrografia_7_0() {
+            return {
+                pane: 'pane_Hidrografia_7',
+                opacity: 1,
+                color: 'rgba(0,0,255,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_Hidrografia_7');
+        map.getPane('pane_Hidrografia_7').style.zIndex = 407;
+        map.getPane('pane_Hidrografia_7').style['mix-blend-mode'] = 'normal';
+        var layer_Hidrografia_7 = new L.geoJson(json_Hidrografia_7, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Hidrografia_7',
+            onEachFeature: pop_Hidrografia_7,
+            style: style_Hidrografia_7_0,
+        });
+        bounds_group.addLayer(layer_Hidrografia_7);
+        function pop_Reservatorios_Monitorados_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? Autolinker.link(String(feature.properties['Name'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">lat</th>\
+                        <td>' + (feature.properties['lat'] !== null ? Autolinker.link(String(feature.properties['lat'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">long</th>\
+                        <td>' + (feature.properties['long'] !== null ? Autolinker.link(String(feature.properties['long'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">relatorios</th>\
+                        <td>' + (feature.properties['relatorios'] !== null ? Autolinker.link(String(feature.properties['relatorios'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">bacia_hidr</th>\
+                        <td>' + (feature.properties['bacia_hidr'] !== null ? Autolinker.link(String(feature.properties['bacia_hidr'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Reservatorios_Monitorados_8_0() {
+            return {
+                pane: 'pane_Reservatorios_Monitorados_8',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,127,0,1.0)',
+            }
+        }
+        map.createPane('pane_Reservatorios_Monitorados_8');
+        map.getPane('pane_Reservatorios_Monitorados_8').style.zIndex = 408;
+        map.getPane('pane_Reservatorios_Monitorados_8').style['mix-blend-mode'] = 'normal';
+        var layer_Reservatorios_Monitorados_8 = new L.geoJson(json_Reservatorios_Monitorados_8, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Reservatorios_Monitorados_8',
+            onEachFeature: pop_Reservatorios_Monitorados_8,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_Reservatorios_Monitorados_8_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Reservatorios_Monitorados_8);
+        function pop_Pocos_Semarh_Perfurados_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Poço_N</th>\
+                        <td>' + (feature.properties['Poço_N'] !== null ? Autolinker.link(String(feature.properties['Poço_N'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Localidade</th>\
+                        <td>' + (feature.properties['Localidade'] !== null ? Autolinker.link(String(feature.properties['Localidade'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Proprietar</th>\
+                        <td>' + (feature.properties['Proprietar'] !== null ? Autolinker.link(String(feature.properties['Proprietar'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DT_Perf</th>\
+                        <td>' + (feature.properties['DT_Perf'] !== null ? Autolinker.link(String(feature.properties['DT_Perf'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Prof_m</th>\
+                        <td>' + (feature.properties['Prof_m'] !== null ? Autolinker.link(String(feature.properties['Prof_m'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Q_m3_h</th>\
+                        <td>' + (feature.properties['Q_m3_h'] !== null ? Autolinker.link(String(feature.properties['Q_m3_h'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Ne_m</th>\
+                        <td>' + (feature.properties['Ne_m'] !== null ? Autolinker.link(String(feature.properties['Ne_m'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nd_m</th>\
+                        <td>' + (feature.properties['Nd_m'] !== null ? Autolinker.link(String(feature.properties['Nd_m'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">RS_mg_l</th>\
+                        <td>' + (feature.properties['RS_mg_l'] !== null ? Autolinker.link(String(feature.properties['RS_mg_l'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Instalado</th>\
+                        <td>' + (feature.properties['Instalado'] !== null ? Autolinker.link(String(feature.properties['Instalado'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Filtro</th>\
+                        <td>' + (feature.properties['Filtro'] !== null ? Autolinker.link(String(feature.properties['Filtro'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPI</th>\
+                        <td>' + (feature.properties['MUNICIPI'] !== null ? Autolinker.link(String(feature.properties['MUNICIPI'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AQUIFERO</th>\
+                        <td>' + (feature.properties['AQUIFERO'] !== null ? Autolinker.link(String(feature.properties['AQUIFERO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LONG</th>\
+                        <td>' + (feature.properties['LONG'] !== null ? Autolinker.link(String(feature.properties['LONG'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LAT</th>\
+                        <td>' + (feature.properties['LAT'] !== null ? Autolinker.link(String(feature.properties['LAT'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Pocos_Semarh_Perfurados_9_0() {
+            return {
+                pane: 'pane_Pocos_Semarh_Perfurados_9',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,196,0,1.0)',
+            }
+        }
+        map.createPane('pane_Pocos_Semarh_Perfurados_9');
+        map.getPane('pane_Pocos_Semarh_Perfurados_9').style.zIndex = 409;
+        map.getPane('pane_Pocos_Semarh_Perfurados_9').style['mix-blend-mode'] = 'normal';
+        var layer_Pocos_Semarh_Perfurados_9 = new L.geoJson(json_Pocos_Semarh_Perfurados_9, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Pocos_Semarh_Perfurados_9',
+            onEachFeature: pop_Pocos_Semarh_Perfurados_9,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Pocos_Semarh_Perfurados_9_0(feature));
+            },
+        });
+        var cluster_Pocos_Semarh_Perfurados_9 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Pocos_Semarh_Perfurados_9.addLayer(layer_Pocos_Semarh_Perfurados_9);
+
+        bounds_group.addLayer(layer_Pocos_Semarh_Perfurados_9);
+        function pop_Barragens_Cadastradas_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nome</th>\
+                        <td>' + (feature.properties['Nome'] !== null ? Autolinker.link(String(feature.properties['Nome'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Alt_AcTe</th>\
+                        <td>' + (feature.properties['Alt_AcTe'] !== null ? Autolinker.link(String(feature.properties['Alt_AcTe'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Capacida</th>\
+                        <td>' + (feature.properties['Capacida'] !== null ? Autolinker.link(String(feature.properties['Capacida'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Prin_com</th>\
+                        <td>' + (feature.properties['Prin_com'] !== null ? Autolinker.link(String(feature.properties['Prin_com'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Empreend</th>\
+                        <td>' + (feature.properties['Empreend'] !== null ? Autolinker.link(String(feature.properties['Empreend'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Data_con</th>\
+                        <td>' + (feature.properties['Data_con'] !== null ? Autolinker.link(String(feature.properties['Data_con'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Uso_prin</th>\
+                        <td>' + (feature.properties['Uso_prin'] !== null ? Autolinker.link(String(feature.properties['Uso_prin'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Latitude_d</th>\
+                        <td>' + (feature.properties['Latitude_d'] !== null ? Autolinker.link(String(feature.properties['Latitude_d'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Longitude_</th>\
+                        <td>' + (feature.properties['Longitude_'] !== null ? Autolinker.link(String(feature.properties['Longitude_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Data_Ins</th>\
+                        <td>' + (feature.properties['Data_Ins'] !== null ? Autolinker.link(String(feature.properties['Data_Ins'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipo_Ins</th>\
+                        <td>' + (feature.properties['Tipo_Ins'] !== null ? Autolinker.link(String(feature.properties['Tipo_Ins'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Niv_Peri</th>\
+                        <td>' + (feature.properties['Niv_Peri'] !== null ? Autolinker.link(String(feature.properties['Niv_Peri'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Barragem_C</th>\
+                        <td>' + (feature.properties['Barragem_C'] !== null ? Autolinker.link(String(feature.properties['Barragem_C'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Dan_PotA</th>\
+                        <td>' + (feature.properties['Dan_PotA'] !== null ? Autolinker.link(String(feature.properties['Dan_PotA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Classe</th>\
+                        <td>' + (feature.properties['Classe'] !== null ? Autolinker.link(String(feature.properties['Classe'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Vaz_Proj</th>\
+                        <td>' + (feature.properties['Vaz_Proj'] !== null ? Autolinker.link(String(feature.properties['Vaz_Proj'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">dominio</th>\
+                        <td>' + (feature.properties['dominio'] !== null ? Autolinker.link(String(feature.properties['dominio'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">lat</th>\
+                        <td>' + (feature.properties['lat'] !== null ? Autolinker.link(String(feature.properties['lat'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIO</th>\
+                        <td>' + (feature.properties['MUNICIPIO'] !== null ? Autolinker.link(String(feature.properties['MUNICIPIO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AQUIFERO</th>\
+                        <td>' + (feature.properties['AQUIFERO'] !== null ? Autolinker.link(String(feature.properties['AQUIFERO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Barragens_Cadastradas_10_0() {
+            return {
+                pane: 'pane_Barragens_Cadastradas_10',
+                shape: 'triangle',
+                radius: 6.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(251,154,153,1.0)',
+            }
+        }
+        map.createPane('pane_Barragens_Cadastradas_10');
+        map.getPane('pane_Barragens_Cadastradas_10').style.zIndex = 410;
+        map.getPane('pane_Barragens_Cadastradas_10').style['mix-blend-mode'] = 'normal';
+        var layer_Barragens_Cadastradas_10 = new L.geoJson(json_Barragens_Cadastradas_10, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Barragens_Cadastradas_10',
+            onEachFeature: pop_Barragens_Cadastradas_10,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_Barragens_Cadastradas_10_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Barragens_Cadastradas_10);
+        function pop_Pocos_SEMARH_Secos_11(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Cia_Perf</th>\
+                        <td>' + (feature.properties['Cia_Perf'] !== null ? Autolinker.link(String(feature.properties['Cia_Perf'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Poço_N</th>\
+                        <td>' + (feature.properties['Poço_N'] !== null ? Autolinker.link(String(feature.properties['Poço_N'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Cia_Perf_1</th>\
+                        <td>' + (feature.properties['Cia_Perf_1'] !== null ? Autolinker.link(String(feature.properties['Cia_Perf_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Localidade</th>\
+                        <td>' + (feature.properties['Localidade'] !== null ? Autolinker.link(String(feature.properties['Localidade'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Proprietar</th>\
+                        <td>' + (feature.properties['Proprietar'] !== null ? Autolinker.link(String(feature.properties['Proprietar'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DT_Perf</th>\
+                        <td>' + (feature.properties['DT_Perf'] !== null ? Autolinker.link(String(feature.properties['DT_Perf'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Prof_m</th>\
+                        <td>' + (feature.properties['Prof_m'] !== null ? Autolinker.link(String(feature.properties['Prof_m'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Q_m3_h</th>\
+                        <td>' + (feature.properties['Q_m3_h'] !== null ? Autolinker.link(String(feature.properties['Q_m3_h'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Ne_m</th>\
+                        <td>' + (feature.properties['Ne_m'] !== null ? Autolinker.link(String(feature.properties['Ne_m'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nd_m</th>\
+                        <td>' + (feature.properties['Nd_m'] !== null ? Autolinker.link(String(feature.properties['Nd_m'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">RS_mg_l</th>\
+                        <td>' + (feature.properties['RS_mg_l'] !== null ? Autolinker.link(String(feature.properties['RS_mg_l'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Obs</th>\
+                        <td>' + (feature.properties['Obs'] !== null ? Autolinker.link(String(feature.properties['Obs'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Instalado</th>\
+                        <td>' + (feature.properties['Instalado'] !== null ? Autolinker.link(String(feature.properties['Instalado'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Filtro</th>\
+                        <td>' + (feature.properties['Filtro'] !== null ? Autolinker.link(String(feature.properties['Filtro'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPI</th>\
+                        <td>' + (feature.properties['MUNICIPI'] !== null ? Autolinker.link(String(feature.properties['MUNICIPI'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AQUIFERO</th>\
+                        <td>' + (feature.properties['AQUIFERO'] !== null ? Autolinker.link(String(feature.properties['AQUIFERO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Long</th>\
+                        <td>' + (feature.properties['Long'] !== null ? Autolinker.link(String(feature.properties['Long'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LAT</th>\
+                        <td>' + (feature.properties['LAT'] !== null ? Autolinker.link(String(feature.properties['LAT'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Pocos_SEMARH_Secos_11_0() {
+            return {
+                pane: 'pane_Pocos_SEMARH_Secos_11',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(162,50,101,1.0)',
+            }
+        }
+        map.createPane('pane_Pocos_SEMARH_Secos_11');
+        map.getPane('pane_Pocos_SEMARH_Secos_11').style.zIndex = 411;
+        map.getPane('pane_Pocos_SEMARH_Secos_11').style['mix-blend-mode'] = 'normal';
+        var layer_Pocos_SEMARH_Secos_11 = new L.geoJson(json_Pocos_SEMARH_Secos_11, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Pocos_SEMARH_Secos_11',
+            onEachFeature: pop_Pocos_SEMARH_Secos_11,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Pocos_SEMARH_Secos_11_0(feature));
+            },
+        });
+        var cluster_Pocos_SEMARH_Secos_11 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Pocos_SEMARH_Secos_11.addLayer(layer_Pocos_SEMARH_Secos_11);
+
+        bounds_group.addLayer(layer_Pocos_SEMARH_Secos_11);
+        function pop_Outorgas_IGARN_12(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NOME_DO_RE</th>\
+                        <td>' + (feature.properties['NOME_DO_RE'] !== null ? Autolinker.link(String(feature.properties['NOME_DO_RE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NÚMERO_DO</th>\
+                        <td>' + (feature.properties['NÚMERO_DO'] !== null ? Autolinker.link(String(feature.properties['NÚMERO_DO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NÚMERO_DA</th>\
+                        <td>' + (feature.properties['NÚMERO_DA'] !== null ? Autolinker.link(String(feature.properties['NÚMERO_DA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CATEGORIA</th>\
+                        <td>' + (feature.properties['CATEGORIA'] !== null ? Autolinker.link(String(feature.properties['CATEGORIA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_DA_PU</th>\
+                        <td>' + (feature.properties['DATA_DA_PU'] !== null ? Autolinker.link(String(feature.properties['DATA_DA_PU'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_DE_VE</th>\
+                        <td>' + (feature.properties['DATA_DE_VE'] !== null ? Autolinker.link(String(feature.properties['DATA_DE_VE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LOCAL_DA_C</th>\
+                        <td>' + (feature.properties['LOCAL_DA_C'] !== null ? Autolinker.link(String(feature.properties['LOCAL_DA_C'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FONTE</th>\
+                        <td>' + (feature.properties['FONTE'] !== null ? Autolinker.link(String(feature.properties['FONTE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FINALIDADE</th>\
+                        <td>' + (feature.properties['FINALIDADE'] !== null ? Autolinker.link(String(feature.properties['FINALIDADE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NM_MUNICIP</th>\
+                        <td>' + (feature.properties['NM_MUNICIP'] !== null ? Autolinker.link(String(feature.properties['NM_MUNICIP'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Aquifero</th>\
+                        <td>' + (feature.properties['Aquifero'] !== null ? Autolinker.link(String(feature.properties['Aquifero'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Outorgas_IGARN_12_0() {
+            return {
+                pane: 'pane_Outorgas_IGARN_12',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(228,67,14,1.0)',
+            }
+        }
+        map.createPane('pane_Outorgas_IGARN_12');
+        map.getPane('pane_Outorgas_IGARN_12').style.zIndex = 412;
+        map.getPane('pane_Outorgas_IGARN_12').style['mix-blend-mode'] = 'normal';
+        var layer_Outorgas_IGARN_12 = new L.geoJson(json_Outorgas_IGARN_12, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Outorgas_IGARN_12',
+            onEachFeature: pop_Outorgas_IGARN_12,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Outorgas_IGARN_12_0(feature));
+            },
+        });
+        var cluster_Outorgas_IGARN_12 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Outorgas_IGARN_12.addLayer(layer_Outorgas_IGARN_12);
+
+        bounds_group.addLayer(layer_Outorgas_IGARN_12);
+        function pop_uso_insignificante_13(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NOME_DO_RE</th>\
+                        <td>' + (feature.properties['NOME_DO_RE'] !== null ? Autolinker.link(String(feature.properties['NOME_DO_RE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NUMERO_DA_</th>\
+                        <td>' + (feature.properties['NUMERO_DA_'] !== null ? Autolinker.link(String(feature.properties['NUMERO_DA_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPO_DE_OB</th>\
+                        <td>' + (feature.properties['TIPO_DE_OB'] !== null ? Autolinker.link(String(feature.properties['TIPO_DE_OB'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FONTE</th>\
+                        <td>' + (feature.properties['FONTE'] !== null ? Autolinker.link(String(feature.properties['FONTE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FINALIDADE</th>\
+                        <td>' + (feature.properties['FINALIDADE'] !== null ? Autolinker.link(String(feature.properties['FINALIDADE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_IRRIG</th>\
+                        <td>' + (feature.properties['AREA_IRRIG'] !== null ? Autolinker.link(String(feature.properties['AREA_IRRIG'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TOTAL_VAZA</th>\
+                        <td>' + (feature.properties['TOTAL_VAZA'] !== null ? Autolinker.link(String(feature.properties['TOTAL_VAZA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_EXP</th>\
+                        <td>' + (feature.properties['DATA_EXP'] !== null ? Autolinker.link(String(feature.properties['DATA_EXP'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NM_MUNICIP</th>\
+                        <td>' + (feature.properties['NM_MUNICIP'] !== null ? Autolinker.link(String(feature.properties['NM_MUNICIP'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Aquifero</th>\
+                        <td>' + (feature.properties['Aquifero'] !== null ? Autolinker.link(String(feature.properties['Aquifero'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_uso_insignificante_13_0() {
+            return {
+                pane: 'pane_uso_insignificante_13',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,192,128,1.0)',
+            }
+        }
+        map.createPane('pane_uso_insignificante_13');
+        map.getPane('pane_uso_insignificante_13').style.zIndex = 413;
+        map.getPane('pane_uso_insignificante_13').style['mix-blend-mode'] = 'normal';
+        var layer_uso_insignificante_13 = new L.geoJson(json_uso_insignificante_13, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_uso_insignificante_13',
+            onEachFeature: pop_uso_insignificante_13,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_uso_insignificante_13_0(feature));
+            },
+        });
+        var cluster_uso_insignificante_13 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_uso_insignificante_13.addLayer(layer_uso_insignificante_13);
+
+        bounds_group.addLayer(layer_uso_insignificante_13);
+        cluster_uso_insignificante_13.addTo(map);
+        function pop_dessalinizadores_14(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Municpio</th>\
+                        <td>' + (feature.properties['Municpio'] !== null ? Autolinker.link(String(feature.properties['Municpio'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipo</th>\
+                        <td>' + (feature.properties['Tipo'] !== null ? Autolinker.link(String(feature.properties['Tipo'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Comunidade</th>\
+                        <td>' + (feature.properties['Comunidade'] !== null ? Autolinker.link(String(feature.properties['Comunidade'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Objeto</th>\
+                        <td>' + (feature.properties['Objeto'] !== null ? Autolinker.link(String(feature.properties['Objeto'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">N_FAM_</th>\
+                        <td>' + (feature.properties['N_FAM_'] !== null ? Autolinker.link(String(feature.properties['N_FAM_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">S</th>\
+                        <td>' + (feature.properties['S'] !== null ? Autolinker.link(String(feature.properties['S'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">W</th>\
+                        <td>' + (feature.properties['W'] !== null ? Autolinker.link(String(feature.properties['W'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Identifica</th>\
+                        <td>' + (feature.properties['Identifica'] !== null ? Autolinker.link(String(feature.properties['Identifica'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Vazao__m3_</th>\
+                        <td>' + (feature.properties['Vazao__m3_'] !== null ? Autolinker.link(String(feature.properties['Vazao__m3_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipo_de_Ob</th>\
+                        <td>' + (feature.properties['Tipo_de_Ob'] !== null ? Autolinker.link(String(feature.properties['Tipo_de_Ob'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Data_de_in</th>\
+                        <td>' + (feature.properties['Data_de_in'] !== null ? Autolinker.link(String(feature.properties['Data_de_in'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Situcao_de</th>\
+                        <td>' + (feature.properties['Situcao_de'] !== null ? Autolinker.link(String(feature.properties['Situcao_de'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Aquifero</th>\
+                        <td>' + (feature.properties['Aquifero'] !== null ? Autolinker.link(String(feature.properties['Aquifero'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_dessalinizadores_14_0() {
+            return {
+                pane: 'pane_dessalinizadores_14',
+                radius: 5.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(175,93,0,1.0)',
+            }
+        }
+        map.createPane('pane_dessalinizadores_14');
+        map.getPane('pane_dessalinizadores_14').style.zIndex = 414;
+        map.getPane('pane_dessalinizadores_14').style['mix-blend-mode'] = 'normal';
+        var layer_dessalinizadores_14 = new L.geoJson(json_dessalinizadores_14, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_dessalinizadores_14',
+            onEachFeature: pop_dessalinizadores_14,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_dessalinizadores_14_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_dessalinizadores_14);
+        function pop_Outorgas_ANA_15(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Codigo_CNA</th>\
+                        <td>' + (feature.properties['Codigo_CNA'] !== null ? Autolinker.link(String(feature.properties['Codigo_CNA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Numero_Pro</th>\
+                        <td>' + (feature.properties['Numero_Pro'] !== null ? Autolinker.link(String(feature.properties['Numero_Pro'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Declaracao</th>\
+                        <td>' + (feature.properties['Declaracao'] !== null ? Autolinker.link(String(feature.properties['Declaracao'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nome_do_Re</th>\
+                        <td>' + (feature.properties['Nome_do_Re'] !== null ? Autolinker.link(String(feature.properties['Nome_do_Re'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">UF</th>\
+                        <td>' + (feature.properties['UF'] !== null ? Autolinker.link(String(feature.properties['UF'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Corpo_Hidr</th>\
+                        <td>' + (feature.properties['Corpo_Hidr'] !== null ? Autolinker.link(String(feature.properties['Corpo_Hidr'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Regiao_Hid</th>\
+                        <td>' + (feature.properties['Regiao_Hid'] !== null ? Autolinker.link(String(feature.properties['Regiao_Hid'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Finalidade</th>\
+                        <td>' + (feature.properties['Finalidade'] !== null ? Autolinker.link(String(feature.properties['Finalidade'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipo_Inter</th>\
+                        <td>' + (feature.properties['Tipo_Inter'] !== null ? Autolinker.link(String(feature.properties['Tipo_Inter'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LATITUDE</th>\
+                        <td>' + (feature.properties['LATITUDE'] !== null ? Autolinker.link(String(feature.properties['LATITUDE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LONGITUDE</th>\
+                        <td>' + (feature.properties['LONGITUDE'] !== null ? Autolinker.link(String(feature.properties['LONGITUDE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Resolucao</th>\
+                        <td>' + (feature.properties['Resolucao'] !== null ? Autolinker.link(String(feature.properties['Resolucao'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CATEGORIA</th>\
+                        <td>' + (feature.properties['CATEGORIA'] !== null ? Autolinker.link(String(feature.properties['CATEGORIA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Volume_Anu</th>\
+                        <td>' + (feature.properties['Volume_Anu'] !== null ? Autolinker.link(String(feature.properties['Volume_Anu'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_plant</th>\
+                        <td>' + (feature.properties['Area_plant'] !== null ? Autolinker.link(String(feature.properties['Area_plant'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Metodo_Irr</th>\
+                        <td>' + (feature.properties['Metodo_Irr'] !== null ? Autolinker.link(String(feature.properties['Metodo_Irr'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Cultura_Ir</th>\
+                        <td>' + (feature.properties['Cultura_Ir'] !== null ? Autolinker.link(String(feature.properties['Cultura_Ir'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">VAZAO_MEDI</th>\
+                        <td>' + (feature.properties['VAZAO_MEDI'] !== null ? Autolinker.link(String(feature.properties['VAZAO_MEDI'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Concentrac</th>\
+                        <td>' + (feature.properties['Concentrac'] !== null ? Autolinker.link(String(feature.properties['Concentrac'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Carga_Maxi</th>\
+                        <td>' + (feature.properties['Carga_Maxi'] !== null ? Autolinker.link(String(feature.properties['Carga_Maxi'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Q_Indispon</th>\
+                        <td>' + (feature.properties['Q_Indispon'] !== null ? Autolinker.link(String(feature.properties['Q_Indispon'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Concentr_1</th>\
+                        <td>' + (feature.properties['Concentr_1'] !== null ? Autolinker.link(String(feature.properties['Concentr_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Kg_dia__</th>\
+                        <td>' + (feature.properties['Kg_dia__'] !== null ? Autolinker.link(String(feature.properties['Kg_dia__'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Q_Indisp_1</th>\
+                        <td>' + (feature.properties['Q_Indisp_1'] !== null ? Autolinker.link(String(feature.properties['Q_Indisp_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">temp_C</th>\
+                        <td>' + (feature.properties['temp_C'] !== null ? Autolinker.link(String(feature.properties['temp_C'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Q_Indisp_2</th>\
+                        <td>' + (feature.properties['Q_Indisp_2'] !== null ? Autolinker.link(String(feature.properties['Q_Indisp_2'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">URL</th>\
+                        <td>' + (feature.properties['URL'] !== null ? Autolinker.link(String(feature.properties['URL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUN</th>\
+                        <td>' + (feature.properties['MUN'] !== null ? Autolinker.link(String(feature.properties['MUN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Aquifero</th>\
+                        <td>' + (feature.properties['Aquifero'] !== null ? Autolinker.link(String(feature.properties['Aquifero'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BACIA</th>\
+                        <td>' + (feature.properties['BACIA'] !== null ? Autolinker.link(String(feature.properties['BACIA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Data_de_pu</th>\
+                        <td>' + (feature.properties['Data_de_pu'] !== null ? Autolinker.link(String(feature.properties['Data_de_pu'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Data_de_ve</th>\
+                        <td>' + (feature.properties['Data_de_ve'] !== null ? Autolinker.link(String(feature.properties['Data_de_ve'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Outorgas_ANA_15_0() {
+            return {
+                pane: 'pane_Outorgas_ANA_15',
+                shape: 'diamond',
+                radius: 5.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,100,0,1.0)',
+            }
+        }
+        map.createPane('pane_Outorgas_ANA_15');
+        map.getPane('pane_Outorgas_ANA_15').style.zIndex = 415;
+        map.getPane('pane_Outorgas_ANA_15').style['mix-blend-mode'] = 'normal';
+        var layer_Outorgas_ANA_15 = new L.geoJson(json_Outorgas_ANA_15, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Outorgas_ANA_15',
+            onEachFeature: pop_Outorgas_ANA_15,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_Outorgas_ANA_15_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Outorgas_ANA_15);
+        
+		//legendas
+		
+	
+		var htmlLegend2 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Outorgas - IGARN',
+            layer: cluster_uso_insignificante_13,
+            elements: [{
+                label: 'Uso Insignificante de Água',
+                html: '<img src="legend/uso_insignificante_13.png"/>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend2)
+	
+		var htmlLegend3 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Outorga de Água - IGARN',
+            layer: cluster_Outorgas_IGARN_12,
+            elements: [{
+                label: 'Outorga de Água - IGARN',
+                html: '<img src="legend/Outorgas_IGARN_12.png"/>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend3)
+	
+		var htmlLegend4 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Barragens Cadastradas',
+            layer: layer_Barragens_Cadastradas_10,
+            elements: [{
+                label: 'Barragens Cadastradas',
+                html: '<img src="legend/BARRAGENS_CADASTRADAS_10.png" />'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend4)
+	
+		var htmlLegend5 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Adutora em Operação',
+            layer: layer_Adutoras_operacao_6,
+            elements: [{
+                label: 'Adutora em Operação',
+                html: '<img src="legend/Adutoras_operacao_6.png" />'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend5)
+	
+	var htmlLegend6 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Dessalinizadores - PAD',
+            layer: layer_dessalinizadores_14,
+            elements: [{
+                label: 'Dessalinizadores - PAD',
+                html: '<img src="legend/dessalinizadores_14.png/>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend6)
+	
+		var htmlLegend8 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Poços Perfurados - SEMARH',
+            layer: cluster_Pocos_Semarh_Perfurados_9,
+            elements: [{
+                label: 'Poços Perfurados - SEMARH',
+                html: '<img src="legend/Pocos_Semarh_Perfurados_9.png" />'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend8)
+	
+		var htmlLegend9 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Rede Hidrográfica',
+            layer: layer_Hidrografia_7,
+            elements: [{
+                label: 'Rede Hidrográfica',
+                html: '<img src="legend/Cursos_Agua_7.png" />'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend9)
+	
+	
+		var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Massa de Água',
+            layer: layer_Massa_Agua_5,
+            elements: [{
+                label: 'Massa de Água',
+                html: '<img src="legend/Massa_Agua_5.png" />'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend11)
+	
+		var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Municípios',
+            layer: layer_Municipios_4,
+            elements: [{
+                label: 'Municípios',
+                html: '<img src="legend/Municipios_4.png" />'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend11)
+	
+		var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Mesorregiões',
+            layer: layer_Mesorregiao_3,
+            elements: [{
+                label: '',
+                html: '<br /><table><tr><td style="text-align: center;"><img src="legend/Mesorregiao_3_AGRESTEPOTIGUAR0.png" /></td><td>AGRESTE POTIGUAR</td></tr><tr><td style="text-align: center;"><img src="legend/Mesorregiao_3_CENTRALPOTIGUAR1.png" /></td><td>CENTRAL POTIGUAR</td></tr><tr><td style="text-align: center;"><img src="legend/Mesorregiao_3_LESTEPOTIGUAR2.png" /></td><td>LESTE POTIGUAR</td></tr><tr><td style="text-align: center;"><img src="legend/Mesorregiao_3_OESTEPOTIGUAR3.png" /></td><td>OESTE POTIGUAR</td></tr></table>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend11)
+	
+		var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Microrregiões',
+            layer: layer_Microrregioes_2,
+            elements: [{
+                label: '',
+                html: '<br /><table><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_AGRESTEPOTIGUAR0.png" /></td><td>AGRESTE POTIGUAR</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_ANGICOS1.png" /></td><td>ANGICOS</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_BAIXAVERDE2.png" /></td><td>BAIXA VERDE</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_BORBOREMAPOTIGUAR3.png" /></td><td>BORBOREMA POTIGUAR</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_CHAPADADOAPODI4.png" /></td><td>CHAPADA DO APODI</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_LITORALNORDESTE5.png" /></td><td>LITORAL NORDESTE</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_LITORALSUL6.png" /></td><td>LITORAL SUL</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_MACABA7.png" /></td><td>MACAÍBA</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_MACAU8.png" /></td><td>MACAU</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_MDIOOESTE9.png" /></td><td>MÉDIO OESTE</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_MOSSOR10.png" /></td><td>MOSSORÓ</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_NATAL11.png" /></td><td>NATAL</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_PAUDOSFERROS12.png" /></td><td>PAU DOS FERROS</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_SERIDOCIDENTAL13.png" /></td><td>SERIDÓ OCIDENTAL</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_SERIDORIENTAL14.png" /></td><td>SERIDÓ ORIENTAL</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_SERRADESANTANA15.png" /></td><td>SERRA DE SANTANA</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_SERRADESOMIGUEL16.png" /></td><td>SERRA DE SÃO MIGUEL</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_UMARIZAL17.png" /></td><td>UMARIZAL</td></tr><tr><td style="text-align: center;"><img src="legend/Microrregioes_2_VALEDOAU18.png" /></td><td>VALE DO AÇU</td></tr></table>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend11)
+	
+		var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Aquíferos',
+            layer: layer_aquiferos_1,
+            elements: [{
+                label: '',
+                html: '<br /><table><tr><td style="text-align: center;"><img src="legend/aquiferos_1_Aluvies0.png" /></td><td>Aluviões</td></tr><tr><td style="text-align: center;"><img src="legend/aquiferos_1_Cristalino1.png" /></td><td>Cristalino</td></tr><tr><td style="text-align: center;"><img src="legend/aquiferos_1_FormaoAu2.png" /></td><td>Formação Açu</td></tr><tr><td style="text-align: center;"><img src="legend/aquiferos_1_FormaoBarreiras3.png" /></td><td>Formação Barreiras</td></tr><tr><td style="text-align: center;"><img src="legend/aquiferos_1_FormaoJandara4.png" /></td><td>Formação Jandaíra</td></tr></table>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend11)
+	
+		var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Bacias Hidrográficas',
+            layer: layer_Bacias_Hidrograficas_0,
+            elements: [{
+                label: '',
+                html: '<br /><table><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1510.png" /></td><td>15-1</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1521.png" /></td><td>15-2</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1532.png" /></td><td>15-3</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1543.png" /></td><td>15-4</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1614.png" /></td><td>16-1</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1625.png" /></td><td>16-2</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1636.png" /></td><td>16-3</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1647.png" /></td><td>16-4</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1658.png" /></td><td>16-5</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_1669.png" /></td><td>16-6</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_16710.png" /></td><td>16-7</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_16811.png" /></td><td>16-8</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioApodiMossor12.png" /></td><td>Bacia do rio Apodi/Mossoró</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioBoqueiro13.png" /></td><td>Bacia do rio Boqueirão</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioCat14.png" /></td><td>Bacia do rio Catú</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioCearMirim15.png" /></td><td>Bacia do rio Ceará-Mirim</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioCurimata16.png" /></td><td>Bacia do rio Curimataú</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioGuaj17.png" /></td><td>Bacia do rio Guajú</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioJac18.png" /></td><td>Bacia do rio Jacú</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioMaxaranguape19.png" /></td><td>Bacia do rio Maxaranguape</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioPirang20.png" /></td><td>Bacia do rio Pirangí</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioPirangiSubbaciadorioPitimbu21.png" /></td><td>Bacia do rio Pirangi - Sub-bacia do rio Pitimbu</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioPiranhasA22.png" /></td><td>Bacia do rio Piranhas/Açú</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioPotengi23.png" /></td><td>Bacia do rio Potengi</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioPuna24.png" /></td><td>Bacia do rio Punaú</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioRioDoce25.png" /></td><td>Bacia do rio Rio Doce</td></tr><tr><td style="text-align: center;"><img src="legend/Bacias_Hidrograficas_0_BaciadorioTrair26.png" /></td><td>Bacia do rio Trairí</td></tr><tr><td style="text-align: center;"/></td><td></td></tr></table>'
+            }]
+        }],
+    })
+    map.addControl(htmlLegend11)
+	var htmlLegend11 = L.control.htmllegend({
+        position: 'bottomleft',
+        legends: [{
+            name: 'Reservatórios Monitorados',
+            layer: layer_Reservatorios_Monitorados_8,
+            elements: [{
+                label: '',
+                html: '<img src="legend/Reservatorios_Monitorados_8.png" />'
+				}]
+        }],
+    })
+    map.addControl(htmlLegend11)
+		//grupo de camadas
+		var baseMaps = [
+						{groupName : "Mapas Base",
+						expanded : true,
+						layers : {
+										"Open Street Maps": basemap0, 
+										"Open Street Maps - P&B": basemap1,
+										"Sátelite - ERSI": basemap2,
+										}
+						}
+						];
+						
+		var Camadas = [{
+						groupName:"Gestão",
+						expanded:true,
+						layers: {
+								"Outorga de Uso de Água - IGARN": cluster_Outorgas_IGARN_12,
+								"Uso Insignificante de Uso de Água":cluster_uso_insignificante_13,
+								}
+						},{
+							groupName:"Limites",
+							expanded:true,
+							layers : {
+									"Municípios":layer_Municipios_4,
+									"Mesorregiões":layer_Mesorregiao_3,
+									"Microrregiões":layer_Microrregioes_2,
+										}
+							},{
+								groupName:"Infraestrutura Hídrica",
+								expanded:true,
+								layers : {
+										"Adultoras em Operação":layer_Adutoras_operacao_6,
+										"Barragens Cadastradas":layer_Barragens_Cadastradas_10,
+										"Reservatórios Monitorados":layer_Reservatorios_Monitorados_8,
+										"Poços Perfurados - SEMARH" : cluster_Pocos_Semarh_Perfurados_9,
+										"Dessalinisadores" : layer_dessalinizadores_14,
+										"Poços Secos - SEMARH" : cluster_Pocos_SEMARH_Secos_11,
+											}
+								},{
+									groupName:"Hidrografia",
+									expanded:true,
+									layers : {
+											"Bacias Hidrográficas" : layer_Bacias_Hidrograficas_0,
+											"Aquíferos" : layer_aquiferos_1,
+											"Rede de Drenagem" : layer_Hidrografia_7,
+											"Massas D'água":layer_Massa_Agua_5,
+												}
+									}
+							];
+		
+		var options = {
+						container_width 	: "300px",
+						container_maxHeight : "800px", 
+						group_maxHeight     : "150px",
+						exclusive       	: false
+	};
+        var control=L.Control.styledLayerControl(baseMaps,Camadas,options);
+		map.addControl(control)
+		
+		//adiciona escala gráfica
+        L.control.scale({
+            position: 'bottomleft'
+        }).addTo(map);
+		
+		//Coordenadas Mouse
+		L.control.mousePosition().addTo(map)
+		
+		
+        </script>
+    </body>
+</html>
